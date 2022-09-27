@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script> 
+        // 实现promise的步骤：
+        //  1.定义一个promise结构 
+        //  2.实现 resolve 和 reject 
+        //  3.实现 throw() 时 走 reject()
+        //  4.实现 .then 功能
+        //  5.实现定时器异步时 Promise 解决异步
+        //  6.实现链式调用 
+
+
+        //  定义一个promise
+        //  这里很重要的一步是resolve和reject的绑定this，为什么要绑定this呢？
+        //  这是为了resolve和reject的this指向永远指向当前的MyPromise实例，防止随着函数执行环境的改变而改变
+         class MyPromise{
+             constructor(executor){
+                // 初始化状态
+                this.initValue()
+                // 初始化执行函数上下文
+                this.initBind()
+                // 执行传进来的函数
+                // 这里try catch 是添加 Promise throw() 功能
+                try{
+                    executor(this.resolve,this.reject)
+                }catch(e){
+                    this.reject(e)
+                }
+             }
+             
+             initValue() {
+                 this.PromiseStatus = 'pendding' //初始化状态
+                 this.PromiseResult = null   //初始化返回结果  
+
+                 this.onFulfilledCallBacks  = []     //定义成功 .then 的回调方法  res=>{}
+                 this.onRejectedCallBacks = []    //定义失败 .then 的回调方法 err=>{}     
+            }
+
+             initBind(){
+                // 初始化this
+                this.resolve = this.resolve.bind(this)
+                this.reject = this.reject.bind(this)
+             }
+
+             resolve(value){
+                if( this.PromiseStatus != 'pendding' ) return //有结束标志就停止
+                this.PromiseStatus = 'fulfilled' 
+                this.PromiseResult = value
+
+                while(this.onFulfilledCallBacks.length){
+                    this.onFulfilledCallBacks.shift()(this.PromiseResult)
+                }
+
+             }
+
+             reject(reason){
+                if( this.PromiseStatus != 'pendding' ) return  //有结束标志就停止
+                this.PromiseStatus = 'rejected'  
+                this.PromiseResult  = reason
+
+                while(this.onRejectedCallBacks.length){
+                    this.onRejectedCallBacks.shift()(this.PromiseResult)
+                }
+             }
+
+             //promise的.then实现  
+             then(onFulfilled,onRejected){
+                //  .then有两个回调参数  res=>{} , err=>{}
+                
+                // 保证两个参数必须是函数  
+                onFulfilled = typeof onFulfilled === 'function' ?  onFulfilled : val=>val
+                onRejected = typeof onRejected === 'function' ?  onRejected :  reason =>{ throw(reason) }
+
+                // promise .then后返回的 其实是一个新的promise 而不是以前的promise  状态由以前的promise决定
+                //then方法本身会返回一个新的Promise对象
+                //1、如果返回值是promise对象，返回值为成功，新promise就是成功（x.then(resolve())）
+                //2、如果返回值是promise对象，返回值为失败，新promise就是失败（x.then(reject())）
+                //3、如果返回值非promise对象，新promise对象就是成功，值为此返回值
+                // 4、返回失败的 通过try catch捕获 
+                //tip:我要去判断我这个promise是走 resolve() 还是 reject() 
+                var promise2 = new MyPromise((resolve,reject)=>{
+                    if(this.PromiseStatus === 'fulfilled'){
+                        // console.log(onFulfilled)
+                      const  x = onFulfilled(this.PromiseResult) 
+                      try{
+                        //instanceof 运算符 用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。  
+                        if( x instanceof MyPromise ){
+                            x.then(
+                               value=>{resolve(value)},  //上一个promise成功就成功
+                               reason=>{reject(reason)}  //上一个promise失败就失败
+                            )
+                        }else{
+                            //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
+                            resolve(x)
+                        }     
+                      }catch(e){
+                        // 4.此时返回值为失败  
+                        reject(e)
+                      }
+                    }else if(this.PromiseStatus === 'rejected'){
+                        const  x =  onRejected(this.PromiseResult)
+                        try{
+                            //instanceof 运算符 用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。  
+                            if( x instanceof MyPromise ){
+                                x.then(
+                                value=>{resolve(value)},  //上一个promise成功就成功
+                                reason=>{reject(reason)}  //上一个promise失败就失败
+                                )
+                            }else{
+                                //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
+                                resolve(x)
+                            }     
+                        }catch(e){
+                            // 4.此时返回值为失败  
+                            reject(e)
+                        }
+                       
+                    }else if(this.PromiseStatus === 'pendding'){
+                        // 此处是解决定时器时  等resolve或 reject 再去 执行.then里的回调
+                        this.onFulfilledCallBacks.push(onFulfilled) 
+                        this.onRejectedCallBacks.push(onRejected)
+                    } 
+                })
+                return promise2;
+             }
+         }
+
+
+
+        const test = new MyPromise((resolve,reject)=>{
+             resolve(123) 
+         }).then(res=>{
+             return  res
+         }).then(
+             res=>{
+                console.log('成功')
+             },
+             err=>{
+                console.log('失败')
+             }
+         )
+
+        
+    </script>
+</body>
+</html>

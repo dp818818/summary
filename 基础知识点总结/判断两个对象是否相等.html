@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+      <script>
+          //Object.prototype.toString.call(obj) === '[object Object]'
+          function isEqual(obj1,obj2){
+               // 判断是否是对象  
+               let isObj = Object.prototype.toString.call(obj1) === '[object Object]' && Object.prototype.toString.call(obj2) === '[object Object]'
+               if(!isObj) false
+               //判断长度 
+               if(Object.keys(obj1).length !==  Object.keys(obj2).length)  false
+               
+               for(let key in  obj1 ){
+                   if( !obj2.hasOwnProperty(key)  || obj1[key] !==  obj2[key]  ){
+                      return false
+                   }
+               }
+               return true
+          }
+
+          let person1 = {
+              name:'ls',
+              age:18
+          }
+
+          let person2 = {
+              name:'ls',
+              age:18
+          }
+
+          
+      </script>
+</body>
+</html>

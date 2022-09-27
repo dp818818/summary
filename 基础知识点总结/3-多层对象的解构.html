@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 不借助vue源代码 实现插值表达式功能  -->
+    <!-- 数据驱动试图 -->
+    <div id="root">
+      <span>{{user.name}}</span>
+      <span>{{user.sex}}</span>
+    </div>
+    
+    <script>
+        // 假如想实现一个类似 vue的 data 中有 name 和 age 属性,并在插值表达式中展示
+        // 1.获取 root 下带{{}} 的文本
+        let rTxt = /\{\{(.+?)\}\}/g
+        function complier(node,data){
+            let childList = node.childNodes
+            for(let i =0;i<childList.length;i++){
+                // 1是元素   3是文本
+                let type = childList[i].nodeType ;
+                if( type == 3 ){
+                    let txt = childList[i].nodeValue;
+                    var newVal  = txt.replace( rTxt ,function(_,g){
+                        // 创建新的文本节点  
+                        let textNode = document.createTextNode(  getValueByPath(data,g) )
+                        let parentNode = childList[i].parentNode
+                        // 替换 原有的 插值文本节点为 新的文本节点
+                        parentNode.replaceChild(textNode,childList[i])
+                    })
+                }else if(type == 1 ){
+                    // 递归
+                     complier(childList[i],data) 
+                }
+            } 
+        }
+
+        // 多层对象中取属性
+        function getValueByPath(obj,path){
+           let pathList  =  path.split('.')
+           let res = obj
+           
+           let prop 
+           while (prop = pathList.shift() ) {
+              res = res[prop]
+           }
+
+           return res;
+        }
+
+
+        var node =  document.querySelector('#root')
+        let data = {
+            user:{
+                name:'dp',
+                sex:'男'
+            }
+        } 
+        complier(node,data)
+        
+    </script>
+
+</body>
+</html>

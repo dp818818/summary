@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 何为闭包：我理解为 ：函数的内部返回一个函数；函数内部的私有作用域，让函数外部无法访问内部的变量，   
+        通过retuen 一个函数，可以将变量存在于闭包中 ，闭包需要手动清除，置为null    -->
+    <!-- 百度百科：闭包就是能够读取其他函数内部变量的函数。
+        例如在javascript中，只有函数内部的子函数才能读取局部变量，所以闭包可以理解成  定义在一个函数内部的函数。
+        在本质上，闭包是将函数内部和函数外部连接起来的桥梁 -->
+        <script>
+            // function farther(){
+            //     let a = '小明'
+            //     return function sub(){
+            //         return a
+            //     }
+            // }
+           
+            // var closure =  farther() 
+            // // console.log(closure())
+
+            // // 经典案例  函数防抖，节流  计数器
+
+            // function a(){
+            //     let myName = '闭包'
+            //     function b(){
+            //        return myName
+            //     }
+            // }
+
+            // console.log(a())
+            
+            //Closure表示闭包
+            function A(){
+                let a = 0
+                return  function B(){
+                    return  a ++
+                   
+                }
+            }
+
+           let num = A()  //调用A  返回函数B 
+           for(let i=0;i<5;i++){
+               let number =  num() //循环调用
+               console.log(number)  // 0 1 2 3 4
+           }  
+
+          
+
+           
+
+        </script>
+
+
+</body>
+</html>

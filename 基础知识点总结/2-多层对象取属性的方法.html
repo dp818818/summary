@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <div>
+            {{user.name}}
+        </div>
+        <div>
+            {{user.sex}}
+        </div>
+    </div>
+
+    <script>
+       
+        
+        function getValueByPath(obj,path){
+           let pathList  =  path.split('.')
+           let res = obj
+           
+           let prop 
+           while (prop = pathList.shift() ) {
+              res = res[prop]
+           }
+
+           console.log(res)
+        }
+
+        let data = {
+            user:{
+               name:'dp',
+               sex:'男'
+            }
+        }
+        
+        getValueByPath(data,'user.name')
+        
+
+    </script>
+</body>
+</html>

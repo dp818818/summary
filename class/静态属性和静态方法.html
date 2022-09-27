@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+<body>
+<script>
+class A{
+   static age = 18
+}
+let a  = new A()
+console.log(a.name) //undefined
+class B extends A{
+}
+console.dir(B.age) //18
+//静态属性和静态方法  a实例无法继承  父类的静态方法（属性），可以被子类继承。
+
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <div  id="root">
+         <div title="123"  name="999">
+             {{name}}
+         </div>
+         <div>
+             {{sex}}
+         </div>
+     </div>
+     <script>
+        // 简写虚拟dom
+          //定义vnode tag 标签名  data 标签中的属性  value 文本值  type node节点类型   
+          class VirtualNode {
+            constructor(tag, data, value, type){
+                this.tag  = tag  && tag.toLowerCase() ;
+                this.data  = data;
+                this.value  = value;
+                this.type  =  type;
+                this.children = []
+            }
+            appendChild(vnode){
+                this.children.push(vnode)
+            }
+          }  
+
+          //dom转为virtual node
+          function getVnode(node){
+              let nodeType = node.nodeType
+              let _vnode 
+              //判断nodeType的类型 文本和元素
+              if( nodeType === 1  ){
+                  let nodeName = node.nodeName 
+                  let attrs = node.attributes
+                  let _attrObj = {}
+
+                  for(let i=0;i<attrs.length;i++){
+                    _attrObj[ attrs[i].nodeName ]  = attrs[i].nodeValue
+                  }
+
+                  _vnode = new  VirtualNode( nodeName,_attrObj, undefined ,nodeType )  
+
+                  //考虑子节点 递归
+                  let childNodes =  node.childNodes
+                  for(let i=0;i<childNodes.length;i++){
+                     _vnode.appendChild(  getVnode(childNodes[i])  )    
+                  }
+
+              }else if ( nodeType === 3 ){
+                _vnode = new  VirtualNode(undefined,undefined,node.nodeValue,nodeType)  
+              }   
+
+              return _vnode;
+          }
+
+          let temp = document.querySelector('#root')
+          console.log( getVnode(temp) )  //完美
+          
+     </script>
+</body>
+</html>

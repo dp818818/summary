@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function Foo (name,age) {
+            this.name = name;
+            this.age  = age
+        }
+
+
+        function createNew(fn,...args ){
+           //1.创建一个新的对象
+           let obj = {}
+
+           //2.将父类原型的属性 添加到新的对象上   
+           obj.__proto__ = fn.prototype   
+         
+           //3.将父类的this指向新对象  foo.name  /  foo.age
+           let value =  fn.call(obj,...args) 
+
+           //4.返回对象   这里为什么会判断一下呢  因为构造函数返回引用类型的话 new 的实例就为 {}
+           return value instanceof Object ? {}  : obj
+        }
+        
+        let foo = createNew(Foo,'张三',18)  
+        console.log(foo)
+        
+    </script>
+
+    
+</body>
+</html>

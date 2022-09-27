@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let obj = {
+            name:'objName',
+            say(num1,num2,num3){
+                console.log(this.name,num1,num2,num3)  
+                // console.log(this.name);
+                return 123;
+            }
+            
+        }
+
+        Function.prototype.myCall = function (ctx,...args){
+           const t =  ctx ===  undefined ?  Window : Object.create(ctx) ;
+           let key  =  Symbol();
+           t[key]  =  this;
+           const result = t[key](...args);
+           delete t[key] ;
+           return  result;
+        }
+       
+
+
+        Function.prototype.myApply  = function(ctx,args){
+           const t =  ctx ===  undefined ?  Window : Object.create(ctx) ;
+           let key  =  Symbol();
+           t[key]  =  this;
+           const result = t[key](...args);
+           delete t[key];
+           return  result
+        }
+        
+        Function.prototype.myBind = function(ctx,...args){
+           const t =  ctx ===  undefined ?  Window : Object.create(ctx) ;
+           let key  =  Symbol();
+           t[key]  =  this;
+
+           return function(){
+                const result = t[key](...args);
+                delete t[key];
+                return  result
+           }
+        } 
+        
+        const test = obj.say.myApply({name:'callName'},[6,7,8])
+        // console.log(test)
+       
+        
+    </script>
+</body>
+</html>

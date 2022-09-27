@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var  user = {
+            name:'dp',
+            sex:'男'
+        }
+        function defineReactive(target,key,value,enumerable){
+             Object.defineProperty(target,key,{
+                 configurable:true,
+                 enumerable:!!enumerable,
+                 get(){
+                     console.log(`${key}被读取了`)    
+                     return value
+                 },
+                 set(newVal){
+                    console.log(`${key}被设置为 ${newVal}`)   
+                    value = newVal
+                 }
+             })
+        }
+
+        let keys = Object.keys(user)
+        for(let i=0;i<keys.length;i++){
+            defineReactive ( user, keys[i] ,user[keys[i]]  ,  true )  
+        }
+
+        // user.name  name被读取了 'dp'
+        // user.sex  sex被读取了  '男'
+        // user.name = 'lisi'   name被设置为 lisi  'lisi'
+        // user.name   name被读取了  'lisi'
+        
+    </script>
+</body>
+</html>

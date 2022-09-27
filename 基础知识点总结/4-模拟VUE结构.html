@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div  id="root">
+         <div>{{user.name}}</div>
+         <div>{{user.sex}}</div>
+    </div>
+
+
+     <script>
+            // 假如想实现一个类似 vue的 data 中有 name 和 age 属性,并在插值表达式中展示
+            // 1.获取 root 下带{{}} 的文本
+            let rTxt = /\{\{(.+?)\}\}/g
+            function complier(node,data){
+                let childList = node.childNodes
+                for(let i =0;i<childList.length;i++){
+                    // 1是元素   3是文本
+                    let type = childList[i].nodeType ;
+                    if( type == 3 ){
+                        let txt = childList[i].nodeValue;
+                        var newVal  = txt.replace( rTxt ,function(_,g){
+                            // 创建新的文本节点  
+                            let textNode = document.createTextNode(  getValueByPath(data,g) )
+                            let parentNode = childList[i].parentNode
+                            // 替换 原有的 插值文本节点为 新的文本节点
+                            parentNode.replaceChild(textNode,childList[i])
+                        })
+                    }else if(type == 1 ){
+                        // 递归
+                        complier(childList[i],data) 
+                    }
+                } 
+            }
+
+            // 多层对象中取属性
+            function getValueByPath(obj,path){
+           let pathList  =  path.split('.')
+           let res = obj
+           
+           let prop 
+           while (prop = pathList.shift() ) {
+              res = res[prop]
+           }
+
+           return res;
+        }
+
+
+
+           // 习惯: 内部的数据使用下划线 开头, 只读数据使用 $ 开头
+           function JGVue(options){
+              this._el = options.el;
+              this._data = options.data;
+
+              this._templateNode = document.querySelector(this._el)  ;
+              // _parentNode是为了replaceChild 替换 dom
+              this._parentNode = this._templateNode.parentNode;
+
+              this.render();
+           }
+
+
+           JGVue.prototype.render = function (){
+                 this.complier()
+           }  
+
+           JGVue.prototype.complier = function(){
+               complier(this._templateNode , this._data)
+               let realDom = this._templateNode.cloneNode(true)
+               this.update(realDom)
+           }
+           
+           JGVue.prototype.update = function(real){
+                this._parentNode.replaceChild(real,document.querySelector('#root'))
+                // console.log(this._templateNode)
+           }
+
+
+           
+           //vue的用法    
+           let app = new JGVue({
+               el:'#root',
+               data:{
+                  user:{
+                    name:'邓鹏',
+                    sex:'男'
+                  }
+               }
+           }) 
+
+
+     </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //只能在类的内部使用 ，如果在类的外部使用，就会报错。
+         class A{
+            #age = 18
+            getAge(){
+                console.log(this.#age)
+            }
+         }
+         class B extends A{}
+         let a = new A()
+         a.getAge() //18
+
+         console.dir(A.hasOwnProperty('getAge')) //false
+         console.dir('getAge'in A) //false 
+         console.dir('getAge'in A.prototype) //true
+         
+         
+
+    </script>
+</body>
+</html>

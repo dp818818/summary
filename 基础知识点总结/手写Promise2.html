@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        
+
+        class myPromise{
+            
+            // static定义静态方法,不能再类的实例中调用静态方法,在类中调用
+            static  all(promises){
+                let result = []
+                let count = 0
+
+                return new myPromise((resolve,reject)=>{
+                    let addCount = (promise,index) =>{
+                        result[index] = promise
+                        count ++ 
+                        if(count === promises.length){
+                            resolve(result)   
+                        } 
+                    }
+                    promises.forEach((item,index)=>{
+                        if(item instanceof myPromise){
+                            item.then(res=>{
+                                addCount(res,index) 
+                            },err=>{
+                               reject(err)
+                            })
+                        }else{
+                            addCount(item,index)
+                        }
+                    })
+                })
+            }
+   
+            // 哪个Promise最快得到结果，就返回那个结果，无论成功失败
+            static race(promises){
+                return new myPromise((resolve,reject)=>{
+                    promises.forEach((item,index)=>{
+                        if(item instanceof myPromise){
+                            item.then(res=>{
+                                resolve(res)
+                            },err=>{
+                                reject(err)
+                            })
+                        }else{
+                            reject(item)
+                        }
+                    })
+                })
+            }
+
+            //接收一个Promise数组，数组中如有非Promise项，则此项当做成功
+            //把每一个Promise的结果{key:value}，集合成数组，返回
+            static addSettled(promises){
+                let result = []
+                let count = 0
+                const fulfilled = 'fulfilled'
+                const rejected = 'fulfilled'
+                return newPromise((resolve,reject)=>{
+                    let addCount = (status,promiseResult,index)=>{
+                        result[index]  = { status, promiseResult },
+                        count ++ 
+                        if(count  === promises.length){
+                            resolve(result)   
+                        }    
+                    }
+                    promises.forEach((item,index)=>{
+                        if(item instanceof myPromise){
+                            item.then(res=>{
+                                addCount(fulfilled, res, index)   
+                            },err=>{
+                                addCount(rejected,err,index)  
+                            })
+                        }else{
+                                addCount(fulfilled,item,index)
+                        }
+                    })
+                })
+            }
+            
+            //any与all相反
+            //如果有一个Promise成功，则返回这个成功结果
+            //如果所有Promise都失败，则报错
+
+            static any(promises){
+                 let count = 0
+                 return myPromise((resolve,reject)=>{
+                    promises.forEach((item,index)=>{
+                        item.then((res=>{
+                            resolve(res) 
+                        },err=>{
+                            count ++ 
+                            if(count ===  promises.length){
+                                reject(new AggregateError('All promises were rejected'))
+                            }
+                        }))
+                    })
+                 }) 
+            }
+
+
+        }
+
+
+        
+    </script>
+</body>
+</html>

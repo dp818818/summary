@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //今天去了一个高级CBD大楼，16层，进入了一个大公司，hr招来了一个其貌不扬的面试官，面试官戴着眼镜，上来轻蔑的看着我，问道：
+        //你能手写promise吗？
+
+        //心想：必须会！机会这不就来了，轻视我，我必须给你点颜色看看!
+
+
+
+         
+        //捋一下，一个promise需要的哪些信息
+        //我灵光一闪，首先想到：resolve,reject,then这3个核心
+        //ok，以这三个模块，搭建基本架子
+
+        // class MyPromise{
+        //     constructor(executor){
+                
+        //     }
+        //     resolve(){
+
+        //     }
+        //     reject(){
+
+        //     }
+        //     then(){
+
+        //     }
+        // }
+
+
+        //有resolve,reject,肯定有对应的状态，联系到初始化数据，状态与返回值
+
+        // class MyPromise{
+        //     constructor(executor){
+        //         //初始化数据
+        //         this.initVal();
+        //     }
+        //     initVal(){
+        //        //初始化为pending等待状态
+        //        this.promiseStatus = 'pending';
+        //        this.promiseResult = null;
+        //     }
+
+        //     resolve(value){
+        //        //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //        if(this.promiseStatus != 'pending'){
+        //           return;
+        //        }
+        //        //状态改为成功
+        //        this.promiseStatus = 'fulfilled';
+        //        this.promiseResult = value;
+
+        //     }
+        //     reject(reason){
+        //         //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //         if(this.promiseStatus != 'pending'){
+        //           return;
+        //         }
+        //         //状态改为失败
+        //        this.promiseStatus = 'rejected';
+        //        this.promiseResult = reason;
+        //     }
+        //     then(){
+               
+        //     }
+        // }
+
+        //当我写到这，面试官露出了不易察觉的嘲讽，我心想不好，肯定是哪出了问题！
+        //看了一遍代码，回想到平时用的promise,确实发现了问题
+        //没有给promise初始化try{}catch(){}，没有执行executor函数
+        //赶紧加上
+
+        // class MyPromise{
+        //     constructor(executor){
+        //         //初始化数据
+        //         this.initVal();
+        //         //throw捕获
+        //         try{
+        //             //执行传进来的函数
+        //             executor(this.resolve,this.reject);  
+        //         }catch(e){
+        //             //throw抛错误直接走reject
+        //             this.reject(e);
+        //         }
+        //     }
+        //     initVal(){
+        //        //初始化为pending等待状态
+        //        this.promiseStatus = 'pending';
+        //        this.promiseResult = null;
+        //     }
+
+        //     resolve(value){
+        //        //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //        if(this.promiseStatus != 'pending'){
+        //           return;
+        //        }
+        //        //状态改为成功
+        //        this.promiseStatus = 'fulfilled';
+        //        this.promiseResult = value;
+
+        //     }
+        //     reject(reason){
+        //         //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //         if(this.promiseStatus != 'pending'){
+        //           return;
+        //         }
+        //         //状态改为失败
+        //        this.promiseStatus = 'rejected';
+        //        this.promiseResult = reason;
+        //     }
+        //     then(){
+               
+        //     }
+        // }
+
+
+        // //赶紧测试一下
+        // let a = new MyPromise((resolve,reject)=>{
+        //     resolve('成功！')
+        // });
+
+        // let b = new MyPromise((resolve,reject)=>{
+        //     reject('失败！')
+        // });
+        
+        // console.log(a);  //{"promiseStatus": "rejected", promiseResult: TypeError: Cannot read properties of undefined (reading 'promiseStatus')at resolve
+        
+        //此时面试官看着我的打印结果，推了眼镜，刚准备开口，我立马知道了问题处在哪里！没有给resolve与reject初始化this指向
+        
+        // class MyPromise{
+        //     constructor(executor){
+        //         //初始化数据
+        //         this.initVal();
+        //         //初始化this指向
+        //         this.initBind();
+        //         //throw捕获
+        //         try{
+        //             //执行传进来的函数
+        //             executor(this.resolve,this.reject);  
+        //         }catch(e){
+        //             //throw抛错误直接走reject
+        //             this.reject(e);
+        //         }
+
+        //     }
+        //     initVal(){
+        //        //初始化为pending等待状态
+        //        this.promiseStatus = 'pending';
+        //        this.promiseResult = null;
+        //     }
+        //     initBind(){
+        //         //将resolve与reject中的this指向为MyPromise实例
+        //         this.resolve = this.resolve.bind(this);
+        //         this.reject = this.reject.bind(this);
+        //     }
+
+
+        //     resolve(value){
+        //        //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //        if(this.promiseStatus != 'pending'){
+        //           return;
+        //        }
+        //        //状态改为成功
+        //        this.promiseStatus = 'fulfilled';
+        //        this.promiseResult = value;
+
+        //     }
+        //     reject(reason){
+        //         //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //         if(this.promiseStatus != 'pending'){
+        //           return;
+        //         }
+        //         //状态改为失败
+        //        this.promiseStatus = 'rejected';
+        //        this.promiseResult = reason;
+        //     }
+        //     then(){
+               
+        //     }
+        // }
+
+
+        //再测试下
+        // let a = new MyPromise((resolve,reject)=>{
+        //     resolve('成功！')
+        // });
+
+        // let b = new MyPromise((resolve,reject)=>{
+        //     reject('失败！')
+        // });
+        
+        // console.log(a);  // MyPromise {promiseStatus: "fulfilled" , promiseResult: "成功！"  }
+        // console.log(b);  //MyPromise {promiseStatus: 'rejected', promiseResult: '失败！'}
+
+
+
+        //没有问题，我长疏了口气，继续往下写去！马上开始写then了，也是开始变难了！
+
+        // class MyPromise{
+        //     constructor(executor){
+        //         //初始化数据
+        //         this.initVal();
+        //         //初始化this指向
+        //         this.initBind();
+        //         //throw捕获
+        //         try{
+        //             //执行传进来的函数
+        //             executor(this.resolve,this.reject);  
+        //         }catch(e){
+        //             //throw抛错误直接走reject
+        //             this.reject(e);
+        //         }
+
+        //     }
+        //     initVal(){
+        //        //初始化为pending等待状态
+        //        this.promiseStatus = 'pending';
+        //        this.promiseResult = null;
+        //     }
+        //     initBind(){
+        //         //将resolve与reject中的this指向为MyPromise实例
+        //         this.resolve = this.resolve.bind(this);
+        //         this.reject = this.reject.bind(this);
+        //     }
+
+
+        //     resolve(value){
+        //        //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //        if(this.promiseStatus != 'pending'){
+        //           return;
+        //        }
+        //        //状态改为成功
+        //        this.promiseStatus = 'fulfilled';
+        //        this.promiseResult = value;
+
+        //     }
+        //     reject(reason){
+        //         //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //         if(this.promiseStatus != 'pending'){
+        //           return;
+        //         }
+        //         //状态改为失败
+        //        this.promiseStatus = 'rejected';
+        //        this.promiseResult = reason;
+        //     }
+        //     then(onfulfilled,onrejected){
+        //         //保证onfulfilled，onrejected都是函数，.then(res=>{},err=>{})参数是函数
+        //         onfulfilled = typeof onfulfilled == 'function' ? onfulfilled : val=>val ;
+        //         onrejected = typeof onrejected == 'function' ? onrejected : reason =>{ throw(reason) };
+
+        //         //判断promiseStatus的状态 成功 失败 等待
+        //         if(promiseStatus == 'fulfilled'){
+        //             onfulfilled(this.promiseResult);
+        //         }else if(promiseStatus == 'rejected'){
+        //             onrejected(this.promiseResult);
+        //         }else if(promiseStatus == 'pending'){
+
+        //         }
+        //     }
+        // }
+
+
+        //此时我想到了promise的链式调用，只有当成功或失败时，才会走.then()方法，比如Promise((resolve,reject)={ settimeout((...)=>,2000) }).then(...)
+        //这种情况是2s后才执行.then,通过控制promiseStatus的状态，其实可以达到这种效果的
+         
+        //我在思考时，无意间看见了面试官的表情，他脸上写满了凝重，看来他也是在思考这个问题！
+        
+        //此时我们定义事件队列,只有，只有执行完上一个任务才会执行下一个，通过状态控制，pending说明是等待状态，直接就推到事件队列中，待执行
+
+        // class MyPromise{
+        //     constructor(executor){
+        //         //初始化数据
+        //         this.initVal();
+        //         //初始化this指向
+        //         this.initBind();
+        //         //throw捕获
+        //         try{
+        //             //执行传进来的函数
+        //             executor(this.resolve,this.reject);  
+        //         }catch(e){
+        //             //throw抛错误直接走reject
+        //             this.reject(e);
+        //         }
+
+        //     }
+        //     initVal(){
+        //        //初始化为pending等待状态
+        //        this.promiseStatus = 'pending';
+        //        this.promiseResult = null;
+        //        //定义事件队列，里面都是待执行的事件
+        //        this.onFulfilledCallBackList = [];
+        //        this.onRejectedCallBacklist = [];
+        //     }
+        //     initBind(){
+        //         //将resolve与reject中的this指向为MyPromise实例
+        //         this.resolve = this.resolve.bind(this);
+        //         this.reject = this.reject.bind(this);
+        //     }
+
+
+        //     resolve(value){
+        //        //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //        if(this.promiseStatus != 'pending'){
+        //           return;
+        //        }
+        //        //状态改为成功
+        //        this.promiseStatus = 'fulfilled';
+        //        this.promiseResult = value;
+
+        //        //执行队列中的事件
+        //        while(this.onFulfilledCallBackList.length){
+        //            this.onFulfilledCallBackList.shift()(this.promiseResult);
+        //        }
+
+        //     }
+        //     reject(reason){
+        //         //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+        //         if(this.promiseStatus != 'pending'){
+        //           return;
+        //         }
+        //         //状态改为失败
+        //        this.promiseStatus = 'rejected';
+        //        this.promiseResult = reason;
+
+        //        //执行队列中的事件
+        //        while(this.onRejectedCallBacklist.length){
+        //             this.onRejectedCallBacklist.shift()(this.promiseResult);
+        //        }
+
+        //     }
+        //     then(onfulfilled,onrejected){
+        //         //保证onfulfilled，onrejected都是函数，.then(res=>{},err=>{})参数是函数
+        //         onfulfilled = typeof onfulfilled == 'function' ? onfulfilled : val=>val ;
+        //         onrejected = typeof onrejected == 'function' ? onrejected : reason =>{ throw(reason) };
+
+        //         //判断promiseStatus的状态 成功 失败 等待
+        //         if(this.promiseStatus == 'fulfilled'){
+        //             onfulfilled(this.promiseResult);
+        //         }else if(this.promiseStatus == 'rejected'){
+        //             onrejected(this.promiseResult);
+        //         }else if(this.promiseStatus == 'pending'){
+        //             //等待状态，需要加入到事件队列
+        //             this.onFulfilledCallBackList.push(onfulfilled);
+        //             this.onRejectedCallBacklist.push(onrejected);
+        //         }
+        //     }
+        // }
+
+
+        // //测试一下
+        // let a = new MyPromise((resolve,reject)=>{
+        //      setTimeout(()=>{
+        //         resolve('123');
+        //      },3000)
+        // }).then(res=>{
+        //      console.log(res);
+        // })
+
+        // console.log(a);  //3s 后打印123 
+
+
+        //此时面试官再看我，已经完全没有了起初那么轻蔑，换来的是客气，面试对我说，还要写下去吗，我已经认可你的实力了！
+        //我不假思索的回答到：就差一点了!
+
+
+        //现在就是.then的问题了，因为then本身会返回一个新的peomise，状态是由上一个promise决定的。
+        //分下面这几种情况：
+        //1、如果返回值是promise对象，返回值为成功，新promise就是成功（x.then(resolve())）
+        //2、如果返回值是promise对象，返回值为失败，新promise就是失败（x.then(reject())）
+        //3、如果返回值非promise对象，新promise对象就是成功，值为此返回值
+        // 4、返回失败的 通过try catch捕获 
+
+       
+
+        class MyPromise{
+            constructor(executor){
+                //初始化数据
+                this.initVal();
+                //初始化this指向
+                this.initBind();
+                //throw捕获
+                try{
+                    //执行传进来的函数
+                    executor(this.resolve,this.reject);  
+                }catch(e){
+                    //throw抛错误直接走reject
+                    this.reject(e);
+                }
+
+            }
+            initVal(){
+               //初始化为pending等待状态
+               this.promiseStatus = 'pending';
+               this.promiseResult = null;
+               //定义事件队列，里面都是待执行的事件
+               this.onFulfilledCallBackList = [];
+               this.onRejectedCallBacklist = [];
+            }
+            initBind(){
+                //将resolve与reject中的this指向为MyPromise实例
+                this.resolve = this.resolve.bind(this);
+                this.reject = this.reject.bind(this);
+            }
+
+
+            resolve(value){
+               //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+               if(this.promiseStatus != 'pending'){
+                  return;
+               }
+               //状态改为成功
+               this.promiseStatus = 'fulfilled';
+               this.promiseResult = value;
+
+               //执行队列中的事件
+               while(this.onFulfilledCallBackList.length){
+                   this.onFulfilledCallBackList.shift()(this.promiseResult);
+               }
+
+            }
+            reject(reason){
+                //不是等待状态，说明已经成功或失败了，只有等待状态才会  resolve() || reject()
+                if(this.promiseStatus != 'pending'){
+                  return;
+                }
+                //状态改为失败
+               this.promiseStatus = 'rejected';
+               this.promiseResult = reason;
+
+               //执行队列中的事件
+               while(this.onRejectedCallBacklist.length){
+                    this.onRejectedCallBacklist.shift()(this.promiseResult);
+               }
+
+            }
+            then(onfulfilled,onrejected){
+                //保证onfulfilled，onrejected都是函数，.then(res=>{},err=>{})参数是函数
+                onfulfilled = typeof onfulfilled == 'function' ? onfulfilled : val=>val ;
+                onrejected = typeof onrejected == 'function' ? onrejected : reason =>{ throw(reason) };
+                //返回新的promise  cb是函数  res或err
+                return new MyPromise( (resolve,reject) =>{
+                    //成功或失败是有上一个promise决定的
+                    //判断promiseStatus的状态 成功 失败 等待
+                    if(this.promiseStatus == 'fulfilled'){
+                        //x是成功这个函数，function(){} 可能是promise,也可能不是
+                        let x =  onfulfilled(this.promiseResult);
+                        try{
+                            //instanceof 运算符 用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。  
+                            if(x instanceof MyPromise){
+                                //1.返回值是promise
+                                x.then(
+                                   value=>{resolve(value)}, //上一个promise成功就成功
+                                   reason=>{reject(reason)} //上一个promise失败就失败
+                                )
+                            }else{
+                                //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
+                                resolve(x)
+                            }
+                        }catch(e){
+                            //4.失败直接reject
+                            reject(e);
+                        }
+                    }else if(this.promiseStatus == 'rejected'){
+                        //x是失败这个函数
+                        let x = onrejected(this.promiseResult);
+                        try{
+                            if(x instanceof MyPromise){
+                                //1.返回值是promise
+                                x.then(
+                                   value=>{resolve(value)}, //上一个promise成功就成功
+                                   reason=>{reject(reason)} //上一个promise失败就失败
+                                )
+                            }else{
+                                //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
+                                resolve(x)
+                            }
+                        }catch(e){
+                            //4.失败直接reject
+                            reject(e);
+                        }
+                    }else if(this.promiseStatus == 'pending'){
+                        //等待状态，需要加入到事件队列
+                        this.onFulfilledCallBackList.push(onfulfilled);
+                        this.onRejectedCallBacklist.push(onrejected);
+                    }
+                })
+            }
+        }
+
+        
+
+       //测试一下
+       let a = new MyPromise((resolve,reject)=>{
+            setTimeout(()=>{
+                resolve(132)
+            },500)
+       }).then(res=>{
+            console.log(res);
+            return res;
+       },err=>{
+            console.log(err);
+       }).then(res=>{
+            console.log(res) ;
+       },err=>{
+            console.log(err);
+       })
+        
+
+
+    </script>
+</body>
+</html>

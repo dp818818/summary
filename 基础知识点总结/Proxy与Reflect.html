@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // Proxy可以拦截对象与数组的增删改查
+        let arr = [1, 2, 3]
+        let p = new Proxy(arr, {
+            get(target, propName) {
+                console.log( `${propName}获取,Proxy`)
+                return target[propName];
+               
+            },
+            set(target, propName,value) {
+                console.log( `${propName}设置属性${value},Proxy`)
+                return target[propName] = value;
+             
+            },
+            deleteProperty(target,propName){
+                console.log( `${propName}删除,Proxy`)
+            }
+            
+        })
+        // Reflect是英文反射的意思   上面有对象的方法  利于错误捕获
+        let a = Reflect.get(arr,0)
+        console.log('a',a);
+       
+
+
+        // Object.defineProperty(arr,0,{
+        //     get(){
+        //        console.log(`获取,defineProperty`); 
+
+        //     },
+        //     set(newValue){
+        //         console.log(`set,defineProperty,${newValue}`); 
+        //     }
+        // })
+
+        // // arr[0] = 2;
+        // arr.length = 5;
+        
+    </script>
+</body>
+
+</html>

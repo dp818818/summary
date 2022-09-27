@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <div>
+            <input  type="button"  id="button"  value="点击" ></input>
+        </div>
+
+        <script>
+             //函数的防抖与节流
+             //防抖：就是高频率的触发一个事件时  只触发最后一次  
+             //比如我们坐公交，刷卡-上车，下一个人刷卡-上车。。。 
+             //直到最后一个人上车，公交车出发。防抖就类似，不管你点击多少次，我就执行最后一次。
+             //就像公交车，不可能是上一个人，车就走了，还有好多人没上去。当然只有一个人等公交时，上完车会走，就像我们只出发一次时，这个事件会立即触发的。
+              
+             let say = function(...args){
+                console.log(arguments)
+                console.log('点击事件触发了')
+             }
+            //  document.getElementById('button').onclick = say  //点击事件触发了
+
+
+             //此时我们用20年的单身手速，一秒点击了20次，会打印20次的‘点击事件触发了’
+
+
+            // //下面我们来实现防抖函数
+            //  function debance(fn){
+            //     //fn参数就是我们要防抖的函数
+            //     //其实有上面的思路 很简单的 
+            //     //首先 debance(say) 会立即调用debance 函数的 所以我们不希望这样 只有点击时才会调用  我们就返回一个函数  点击的时候  就相当于调用返回的函数
+            //     let timer  //定义一个变量 我们为什么把timer 定义在外面呢 这是巧妙的运用了闭包  timer将一直被后面引用  而定义在里面时不行 相当于 你每次点击都重新定义了timer 就没有后面的计时器判断了
+            //     return function(){
+            //         if(timer){  //有计时器 就清楚掉计时器
+            //             clearTimeout(timer)
+            //         }
+            //         timer = setTimeout(() => {  //定义计时器  一秒后调用函数fn
+            //             fn()
+            //         }, 1000);
+            //     }
+            //  } 
+
+            //  document.getElementById('button').onclick = debance(say)  //一秒内点击了10次 只打印了一次
+
+
+            //上面简单的防抖就已经成功了  下面我们来优化一下（1.自定义触发时间  2.是否立即调用 （当我点击的时候  是希望立即调用的  而不是延迟调用））
+            //  function debance(fn,wait,immidate){
+            //      let timer
+            //      return function(){
+            //         if(timer){clearTimeout(timer)}
+            //         if(immidate){
+            //             let callNow = !timer  //第一次点击 timer=null  callNow = !null = true
+            //             timer = setTimeout(()=>{
+            //                 timer = null  //wait 后重置timer  点击 就可以再次触发点击事件
+            //             },wait)
+            //             if(callNow){   //立即执行
+            //                 fn()
+            //             }
+            //         }else{
+            //             timer = setTimeout(()=>{fn()},wait)
+            //         }
+            //      }
+            //  } 
+           
+            // document.getElementById('button').onclick = debance(say,1000,true)   //立即触发 等最后一次点击活了 wait后 再点击才会触发
+
+            
+            //到这就基本完成了  但是此时say函数中的this 指向是有问题的  应该指向的是button  我们此时去打印以下  (Window)
+            function debance(fn,wait,immidate){
+                 let timer
+                 return function(){
+                    // console.log(this);  //<input type="button" id="button" value="点击">
+                    if(timer){clearTimeout(timer)}
+                    if(immidate){
+                        let callNow = !timer  //第一次点击 timer=null  callNow = !null = true
+                        timer = setTimeout(()=>{
+                            timer = null  //wait 后重置timer  点击 就可以再次触发点击事件
+                        },wait)
+                        if(callNow){   //立即执行
+                            fn.apply(this,arguments)
+                        }
+                    }else{
+                        timer = setTimeout(()=>{
+                            fn.apply(this,arguments)
+                        },wait)
+                    }
+                 }
+             } 
+
+            document.getElementById('button').onclick = debance(say,1000,true)   //立即触发 等最后一次点击活了 wait后 再点击才会触发
+
+            
+
+             //节流：高频率的触发一个事件时，每隔一段时间执行一次
+
+             
+             
+
+        </script>
+
+
+    </body>
+</html>

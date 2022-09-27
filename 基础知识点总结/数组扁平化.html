@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     <script>
+         
+        // 函数递归
+        let arr3 = []
+        function removal(arr){
+            arr.forEach((item,index)=>{
+                 if(Array.isArray(item)){
+                    removal(item)
+                 }else{
+                    arr3.push(item) 
+                 }
+            })    
+            return arr3
+        }
+
+        let testArr = [ 1,[2,[3]] ]
+
+        console.log(removal(testArr))
+        
+     </script>
+</body>
+</html>

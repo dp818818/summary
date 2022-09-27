@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        //js预编译分为全局预编译和局部预编译，在执行代码前会扫一遍，出现错误就直接报错
+        //预编译会造成  变量提升与函数提升 ，函数是整个提升
+        
+    //   console.log('a',a ); //undefined 
+      var a = 5;
+      
+    //let没有变量提升
+    //   console.log(b); //ReferenceError: Cannot access 'b' before initialization  
+      let b = 5;
+      
+
+      //const没有变量提升
+    //   console.log('c',c ); //ReferenceError: Cannot access 'c' before initialization
+      const c = 5;
+      
+
+
+    //   console.log('d',d ); //ƒ d(){console.log(123);}  函数提升  是整体提升，包括函数内容
+      function d(){
+        console.log(123);
+      };
+
+    //   局部预编译也有变量提升
+    f();
+
+    function f(){
+       console.log('g',g); //undefined
+       var g = 66;
+    }
+
+    </script>
+</body>
+</html>

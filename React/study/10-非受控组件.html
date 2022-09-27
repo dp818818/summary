@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 引入react cdn -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <!-- 引入ReactDom -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel用来转化JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+    <script type="text/babel">
+        class MyDom extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <form onSubmit={this.submit}>
+                            用户名：<input type='text' ref={(c) => { this.userName = c }} name='userName' />
+                            密码：<input type='password' ref={(c) => { this.password = c }} name='password' />
+                            <button>提交</button>
+                        </form>
+                    </div>
+                )
+
+            }
+            submit = (event) => {
+                // 阻止表单提交
+                event.preventDefault();
+                const { userName, password } = this
+                alert(`您输入的账号是${userName.value},密码是${password.value}`)
+            }
+        }
+        ReactDOM.render(<MyDom />, document.getElementById('root'))
+
+    </script>
+</body>
+
+</html>

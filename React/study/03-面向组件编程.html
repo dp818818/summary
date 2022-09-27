@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 引入react cdn -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <!-- 引入ReactDom -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel用来转化JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root">
+    </div>
+
+    <script type="text/babel">
+        // function Name(props) {
+        //     return <h1>React,{props.name}</h1>
+        // }
+        // ReactDOM.render(<Name name='面向组件' />, document.getElementById('root'))
+
+        // 组件 state  props   props是单向传递不可修改
+        let requestDate = {
+            name:'小明',
+            riQi:'2022-09-05'
+        }
+        class MyComponents extends React.Component {
+            state = { isHot: false }
+            render() {
+                return <h1  className='weather' onClick={this.changWeather}>今天是{this.props.riQi},{this.props.name}感觉今天的天气很{this.state.isHot ? '炎热' : '凉爽'}</h1>
+            }
+            // 箭头函数改变changWeather内部this的指向
+            changWeather=()=>{
+                const isHot = this.state.isHot
+                this.setState({
+                    isHot:!isHot
+                });
+            }
+        }
+        ReactDOM.render(<MyComponents name={requestDate.name}   riQi={requestDate.riQi}  />, document.getElementById('root'))
+        // 也可以用展开远算符
+        // ReactDOM.render(<MyComponents {...requestDate}  />, document.getElementById('root'))
+
+    </script>
+
+    <style>
+        .weather{
+            cursor: pointer;
+            color:red
+        }
+    </style>
+</body>
+
+</html>

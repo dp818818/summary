@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 在了解call之前  先弄清楚this的指向问题
+        //1.在函数中this的指向  结论：函数中的this,谁调用函数 就指向谁
+        // function point(){
+        //     console.log('func', this)
+        // }
+        // point()  //指向Window 
+
+        // let obj = {
+        //     name:'小吴',
+        //     age:'99',
+        //     say(){ 
+        //        console.log( `我叫${this.name},我今年${this.age}岁了`)
+        //     }
+        // }
+        // console.log(obj.say())  // 我叫小吴,我今年99岁了   undefined  为什么会有 undefined ？ 因为say方法没有retuen 值
+
+        // let obj = {
+        //     name:'小吴',
+        //     age:'99',
+        //     say(){ 
+        //        console.log( `我叫${this.name},我今年${this.age}岁了`)
+        //        return 1
+        //     }
+        // }
+        
+        // console.log(obj.say())  // 我叫小吴,我今年99岁了   1    指向obj
+        
+
+        //2.箭头函数中this的指向 ： 箭头函数中this , 指向上一级上下文
+        // let fn = ()=>{
+        //   console.log(this)
+        // }
+
+        // let point = {
+        //     name:'小明',
+        //     fn
+        // }
+
+        // console.log(point.fn())   //指向window 而不是point 结论：箭头函数中this , 指向上一级上下文
+
+       
+        //call的功能是什么：
+        
+        let obj = {
+            name:'小吴',
+            age:'99',
+            say(num1,num2,num3){ 
+                //    console.log( `我叫${this.name},我今年${this.age}岁了`)  // 我叫小名,我今年88岁了
+                console.log(num1,num2,num3)  //1 2 3
+                return 89
+            }
+        }
+        // obj.say.call({name:'小名',age:'88'},1,2,3)  //结论：call使obj.say中的this 指向了{name:'小名',age:'88'} ， 并传递了1,2,3
+        
+        Function.prototype.myCall = function(obj,...args){
+            //   console.log(obj) //{name: '小名', age: '88'}
+            //   console.log(args) //[1, 2, 3]
+            //   console.log(this) //  ƒ say(...args){...} 
+              let self = this 
+              let t = obj || window 
+              t.fn = self  //相当于在obj中添加了 ƒ say(...args){...}, ƒ say(...args){...} 中的this 就会指向obj
+              //t.fn()
+              // console.log(t)  
+              //age: "88"  
+              //fn: ƒ say(...args)   
+              //name: "小名"
+              t.fn(...args)
+              delete t.fn
+              
+        }
+
+        obj.say.myCall({name:'小名',age:'88'},1,2,3)
+
+        let applyObj = {
+            name:'zzz' ,
+            say(num1,num2,num3){
+              console.log(this.name,num1,num2,num3)
+            }
+        }
+
+        Function.prototype.myApply = function(...args){
+           let obj =  args.shift();
+           let self = this || window
+           obj.fn = self
+
+           obj.fn(...args[0])
+           delete obj.fn 
+        }
+        // applyObj.say.myApply({name:'qqq'},[1,2,3])
+
+
+
+        let bindObj = {
+            name:'clear',
+            say(num1,num2,num3){
+              console.log(this.name,num1,num2,num3)
+              return 666
+            }
+        }
+        Function.prototype.myBind =  function(){
+             let args = Array.prototype.slice.call(arguments)
+             let obj =  args.shift()
+             let self = this
+             const newFun = function(){
+                obj.fn = self
+                obj.fn(...args)
+             }
+             
+             return newFun
+        }
+
+        // let test =  bindObj.say.myBind({name:'love'},1,2,3)
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+    </script>
+</body>
+</html>

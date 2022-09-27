@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+         <button  id="button">防抖</button>
+         <button  id="button2">节流</button>
+
+    </div>
+
+    <script>
+        // 函数防抖  高频触发一件事件时  只触发最后一次  
+        function  debounce(fn,wait,immedidate){
+            let timer 
+            return function(){
+              let time =  wait  
+              if(timer){
+                clearTimeout(timer)
+              }  
+
+              if(immedidate){
+                  var callBack  = !timer
+                  timer = setTimeout(()=>{
+                    timer = null
+                  },time) 
+                  if(callBack){
+                    fn.apply(this,arguments)
+                  }
+             
+              }else{
+                timer = setTimeout(()=>{
+                  fn.apply(this,arguments)
+                },time)
+              }
+            }
+        }
+
+        function sayDebounce(e){
+            //需要防抖的操作 
+             console.log('防抖成功')
+        }
+        document.getElementById('button').onclick = debounce(sayDebounce,1,true)
+
+        // 函数节流  一个事件段内  至触发一次
+        function throttle(fn){
+            let timer = null
+            return function(){
+                if(timer){
+                    return
+                }
+                
+                timer = true
+                setTimeout(()=>{
+                    fn.apply(this,arguments)
+                    timer = null 
+                },2000)
+            }
+        }
+        
+        function sayThrottle(){
+            console.log("天啊，节流了")
+        }
+
+        document.getElementById('button2').onclick  =  throttle(sayThrottle)
+
+        
+        
+        
+
+
+
+
+          
+    </script>
+
+
+    <style>
+        #button{
+            width: 100px;
+            height: 50px;
+        }
+        #button2{
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</body>
+</html>

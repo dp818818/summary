@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 引入react cdn -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <!-- 引入ReactDom -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel用来转化JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+     
+    
+    <div id="root"></div>
+    <script type="text/babel">
+        class MyDom extends React.Component{
+            render(){
+                return(
+                    <div>
+                        <input type="text"  ref="input1"  />&nbsp;
+                        <button onClick={this.getValue}>点击提示</button>&nbsp;
+                        <input type="password"  onChange={this.getValue2} ref="input2"  />
+                    </div>
+                )
+            }
+            getValue=()=>{
+              //Vue写习惯了  老爱在refs前面加$   vue获取dom节点是 $refs 
+              alert(this.refs['input1'].value) 
+            }  
+            getValue2=()=> alert(this.refs['input2'].value)
+        }
+        ReactDOM.render(<MyDom />, document.getElementById('root'))
+    </script>
+</body>
+</html>

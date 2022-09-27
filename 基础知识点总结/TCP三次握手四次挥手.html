@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- 客户端与服务器之间数据的发送和返回的过程当中需要创建一个叫TCP connection的东西，
+    由于TCP不存在连接的概念，只存在请求和响应，请求和响应都是数据包 -->
+     三次握手：
+       <!-- 1.客户端向服务端发出链接请求 -->
+       <!-- 2.服务器确认向客户端发出响应 -->
+       <!-- 3.客户端向服务器建立链接 -->
+
+    四次挥手：
+       <!-- 1.客户端向服务器发送终止协议 -->
+       <!-- 2.服务器确认终止协议，未终止，等待数据传送完毕 -->
+       <!-- 3.服务器向客户端传输剩余数据 -->
+       <!-- 4.确认数据传输完毕，向服务器释放链接 -->
+    
+    
+       
+    <!-- http缓存：分为强缓存和协商缓存。强缓存不向服务器发送请求交互，协商缓存需要向浏览器发送请求。 他俩都存在本地浏览器中  -->
+            <!-- 强缓存：    优点： 不需要向服务器发送请求，加载速度快，性能好。状态码：200
+                       缺点：强缓存生效期间，服务器资源发生修改，浏览器获取不到。 -->
+            <!-- 协商缓存:   请求资源时，把用户本地该资源的 etag 同时带到服务端，服务端和最新资源做对比。
+                       如果资源没更改，返回304，浏览器读取本地缓存。
+                       如果资源有更改，返回200，返回最新的资源。           -->
+    强缓存请求头：Pragma、Cache-Control、Expires
+    协商缓存请求头：Etag、if-Not-Match、LastModified、if-Midified-since                  
+                    
+    cookie:只能存储字符串，最大4k， 存储在浏览器端 
+           客户端向服务器发送请求，服务器返回Cookie，客户端将存储Cookie，并在请求时带上Cookie  
+
+    session :什么都能存储，大小没有限制， 存储在服务器端  
+                当浏览器第一次访问服务器时，服务器创建一个session对象(该
+                对象有一个唯一的id,一般称之为sessionId),服务器会将sessionId
+                以cookie的方式发送给浏览器。
+                当浏览器再次访问服务器时，会将sessionId发送过来，服务器依据
+                sessionId就可以找到对应的session对象。
+    
+    localStorage:存在浏览器端，永久储存直至清除。
+    sessionStorage:存在浏览器端，关闭窗口时清除。
+    
+       
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 引入react cdn -->
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <!-- 引入ReactDom -->
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <!-- babel用来转化JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script> 
+
+    <div id="root">
+    </div>
+    
+    <!-- 纯函数的创建虚拟dom -->
+    <script type="text/javaScript">
+        var VNode = React.createElement('h1',{class:'myClass'},React.createElement('span',{id:'title'},'Hello React'))
+        ReactDOM.render(VNode,document.getElementById('root'))
+    </script>
+
+
+    <!-- JSX创建虚拟dom  -->
+    <script  type="text/babel">
+        const arr = ['苹果','香蕉','菠萝']
+        const myDom = 
+        <div className='myClass'  id='title'  style={{color:'red',background:'yellow'}}>
+            <ul>
+               {
+                // 循环arr展示
+                arr.map((item,index)=>{
+                    return <li>{item}</li>
+                })
+               }
+            </ul>               
+        </div>
+        ReactDOM.render(myDom,document.getElementById('root'))
+    </script>
+    
+    <style>
+        .myClass{
+            font-size: 30px;
+        }
+        #title{
+            font-weight: 600;
+        }
+    </style>
+</body>
+</html>

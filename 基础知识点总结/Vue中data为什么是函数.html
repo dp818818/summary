@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 是为了避免数据污染，因为组件会重复，多处引用，防止data的值互相篡改 -->
+    <script>
+        //组件
+        class Vue{
+            constructor(){
+                this.data = {
+                    a:1,
+                    b:2
+                }; 
+            }
+        }
+        //引用
+        let v1 = new Vue();
+        let v2 = new Vue();
+        
+
+        v1.data.a = 3;
+        console.log(v2.data.a); //1
+
+    </script>
+</body>
+</html>
