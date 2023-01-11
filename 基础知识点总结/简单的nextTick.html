@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 定义控制执行
+        let pending = false;
+        // 定义要执行的函数集合
+        let callBacks = [];
+        // 定义执行异步任务的方式
+        let timerFunc;
+        // 清空 callBacks中添加的函数
+        function flushCallBacks() {
+            //依次执行
+            callBacks.forEach(cb => {
+                cb();
+            })
+            // 重置状态  进行下一个tick
+            pending = false;
+            callBacks = [];
+        }
+
+        // 微任务优先宏任务  判断是否支持各个异步任务   优先级 Promise.resolve().then() > MutationObserver > setImmidate > setTimeout
+        if (typeof Promise !== 'undefined') {
+            var p = Promise.resolve();
+            timerFunc = function () {
+                p.then(flushCallBacks)
+            }
+        } else if (typeof MutationObserver !== 'undefined') {
+            let textNode = document.createTextNode('1');
+            let observer = new MutationObserver(flushCallBacks);
+            observer.observe(textNode, { characterData: true });
+            textNode.data = '2';
+        } else if (typeof setImmidate !== 'undefined') {
+            timerFunc = function () {
+                setImmidate(flushCallBacks)
+            }
+        } else {
+            timerFunc = function () {
+                setTimeout(flushCallBacks, 0)
+            }
+        }
+
+        function nextTick(cb) {
+            // 将执行函数，添加到事件集合中
+            callBacks.push(cb)
+            // 第一次执行时 为真
+            if (!pending) {
+                pending = true;
+                timerFunc()
+            }
+        }
+
+
+
+        function a() {
+            console.log('a');
+        }
+        function b() {
+            console.log('b');
+        }
+        function c() {
+            console.log('c');
+        }
+
+        nextTick(a)
+        nextTick(b)
+        nextTick(c)
+
+
+        function d() {
+            console.log('d');
+        }
+        d()
+
+    </script>
+</body>
+
+</html>

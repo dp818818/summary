@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        #label {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        #input {
+            width: 200px;
+            height: 40px;
+            font-size: 16px;
+        }
+    </style>
+    <div>
+        <input type="text" id="input" value="" />
+        <div id="label">
+
+        </div>
+
+        <div>
+            <button onclick="changeNum()">改变数字</button>
+        </div>
+    </div>
+
+    <script>
+        let data = {
+            inputValue: 20
+        }
+        //代理data  p的值改变会被监测 
+        let p = new Proxy(data, {
+            get(target, propName) {
+               return  target[propName];
+            },
+            set(target, propName, value) {
+                document.getElementById('label').innerText = value;
+                document.getElementById('input').value = value;
+                return  target[propName] = value;
+            }
+        })
+
+        document.getElementById('label').innerText = p.inputValue;
+        document.getElementById('input').value = p.inputValue;
+        document.getElementById('input').addEventListener('change',(e)=>{
+           p.inputValue = e.target.value;
+        })
+
+        function changeNum(){
+            p.inputValue = 30
+
+        }
+      
+    </script>
+</body>
+
+</html>

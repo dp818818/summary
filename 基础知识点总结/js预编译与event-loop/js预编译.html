@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+        js 运行时的三个过程
+          1.语法分析：对代码通篇检查，排除一些低级错误
+          2.预编译：在代码执行前一刻
+          3.解释执行：执行代码
+     -->
+
+    <!-- 
+        预编译的四个步骤：
+           1.创建AO对象
+           2.找出形参和变量声明，将变量声明的名作为AO对象的属性，值为undefined
+           3.将实参和形参相统一
+           4.找出函数声明（不是函数表达式），赋予其变量声明
+     -->
+    <script>
+        function myTest(c, d) {
+            c = 5;
+            console.log(a);  //function a() { } 
+            var a = 1;
+            var b = 2;
+            console.log(b);  //2
+            function a() { }
+            console.log(c);  //5
+            function c() { }
+            console.log(c);  //5
+        }
+        myTest(2, 3)
+
+        /*
+        let AO = {
+            c: undefined 2 function c() { }
+            d: undefined 3
+            a: undefined   function a() { } 
+            b: undefined
+        }
+        */ 
+    </script>
+</body>
+
+</html>

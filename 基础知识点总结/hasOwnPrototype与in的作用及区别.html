@@ -9,7 +9,7 @@
 <body>
     <script>
          //hasOwnPrototype 与 in 都可以检测一个对象上是否有某个属性
-         
+         //hasOwnPrototype只能判断对象自身是否有这个属性，原型链上的不算，in只有原型链上有这个属性就为真
          //例如
 
          let obj = {
@@ -19,13 +19,13 @@
 
         //  console.log('name' in obj) 
 
-        // console.log(obj.hasOwnProperty('name'))
+        console.log(obj.hasOwnProperty('name')) //true
 
         obj.__proto__.sex = '男'
         
         //  console.log('sex' in obj) 
 
-        // console.log(obj.hasOwnProperty('sex'))
+        console.log(obj.hasOwnProperty('sex')) //false
 
     </script>
 </body>

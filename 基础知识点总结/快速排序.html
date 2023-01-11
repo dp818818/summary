@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 比起始小的放左，大的放又
+        let arr = [4, 8, 6, 9, 5, 7, 2, 1, 3]
+
+        function quickort(arr) {
+            if (arr.length <= 1)  return arr;
+            // 定义一个基准点
+            let num = arr[0];
+            // 左比基准点小，右比基准点大
+            let left = [];
+            let right = [];
+            for (let i = 1; i < arr.length; i++) {
+                if (num > arr[i]) {
+                    left.push(arr[i])
+                }else{
+                    right.push(arr[i])
+                }
+            }
+            // 继续循环左右数组  基准点不能忘记加上去了
+            return quickort(left).concat([num],quickort(right))
+        }
+
+        console.log(quickort(arr))
+
+    </script>
+</body>
+
+</html>

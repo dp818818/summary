@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 事件委托：监听与控制父元素的事件与方法，通过冒泡来控制子元素，避免在子元素上一个个的绑定方法，减低内存的消耗，新添加子元素时也不用一个去添加事件，减少dom操作降低了回流和重绘，从而加快页面交互 -->
+    <div id="container">
+        <div id="son1">son1</div>
+        <div id="son2">son2</div>
+        <div id="son3">son3</div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        container.addEventListener('click',function(e){
+           console.log(e.target)  //target:触发事件元素     currentTarget:绑定事件元素
+        })
+    </script>
+
+    <style>
+        #container{
+            line-height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</body>
+</html>

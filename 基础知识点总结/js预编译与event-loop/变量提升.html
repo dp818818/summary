@@ -7,8 +7,14 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <input  type="file"  accept="image/jpeg" capture="camera" />
-    </div>
+    <script>
+      console.log(a);  //undefined  因为预编译
+      var a = 5
+      
+
+      console.log(b); //Uncaught ReferenceError: Cannot access 'b' before initialization
+      let b = 5
+      
+    </script>
 </body>
 </html>

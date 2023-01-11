@@ -10,21 +10,56 @@
     <!-- 是为了避免数据污染，因为组件会重复，多处引用，防止data的值互相篡改 -->
     <script>
         //组件
-        class Vue{
-            constructor(){
-                this.data = {
-                    a:1,
-                    b:2
-                }; 
-            }
-        }
-        //引用
-        let v1 = new Vue();
-        let v2 = new Vue();
+        // class Vue{
+        //     constructor(){
+        //         this.data = {
+        //             a:1,
+        //             b:2
+        //         }; 
+        //     }
+        // }
+        // //引用
+        // let v1 = new Vue();
+        // let v2 = new Vue();
         
 
-        v1.data.a = 3;
-        console.log(v2.data.a); //1
+        // v1.data.a = 3;
+        // console.log(v2.data.a); //1
+
+
+ 
+        //data为函数时 v1 v2数据互不影响
+        // const data = function(){
+        //     return{
+        //         age:100
+        //     }
+        // }
+
+        // let v1 = data()
+        // let v2 = data()
+        // // console.log(v1,v2)  //{age: 100} {age: 100}
+
+        // // console.log(v1 === v2)  //false
+
+        // v1.age = 30
+        // console.log(v1,v2) //{age: 30} {age: 100}
+
+
+
+        // data为对象时   v1 v2数据互影响   证明Vue 中组件的data必须时函数
+        const data = {
+            age:100
+        }
+
+        let v1 = data;
+        let v2 = data;
+        v1.age = 30
+        console.log(v2.age)   //30  
+
+
+ 
+
+
 
     </script>
 </body>

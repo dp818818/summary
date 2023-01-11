@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 展开运算符
+        let a = [1, 2, 3, 4, 5]
+        let a1 = [...a]
+        // console.log('a1', a1)  //[1, 2, 3, 4, 5]
+
+        const b = { name: '张三', age: 18 }
+        const b2 = { ...b }
+        // console.log('b2', b2)  {name:'张三',age:18}
+
+
+
+        // 数组解构赋值 ：根据下标
+        let c = [1, 2, 3, 4, 5];
+        let [d, e]   = [1, 2, 3, 4, 5]
+        // console.log('d,e', d, e)  //1  2
+        
+
+
+        //对象解构赋值:根据key解构
+        let f = { name: '张三', age: 18 }
+        const {age,name} = f
+        const { g } = f
+        console.log('age',age)  //18
+        console.log('name',name)  //张三
+        console.log('g',g)  //undefined
+
+    </script>
+</body>
+
+</html>

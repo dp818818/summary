@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <script>
+        let myarr = [8, 7, 9, 5, 3, 6, 4, 2, 1]
+
+        //冒泡排序
+        //走length-1趟   因为最后一个数不需要比  只有它自己了
+        function bubleSort(array) {
+            let arr = array
+            for (let i = 0; i < arr.length - 1; i++) {
+                // 每趟走多少次？ 每趟次数会少1，因为每趟会固定一个这趟最大的数放在最后，所以每趟次数是 arr.length-1-i ;第一趟8次，第二趟7次。。。
+                for (j = 0; j < arr.length - 1 - i; j++) {
+                    if (arr[j] > arr[j + 1]) {
+                        let temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+            return arr;
+
+        }
+        // console.log(bubleSort(myarr))
+
+        // 优化  当顺序提前正确了 就不再走了
+        function bubleSort2(array) {
+            let arr = array
+            let already = true;
+            for (let i = 0; i < arr.length - 1; i++) {
+                // 每趟走多少次？ 每趟次数会少1，因为每趟会固定一个这趟最大的数放在最后，所以每趟次数是 arr.length-1-i ;第一趟8次，第二趟7次。。。
+                for (j = 0; j < arr.length - 1 - i; j++) {
+                    already = false;
+                    if (arr[j] > arr[j + 1]) {
+                        let temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+            // 如果此趟顺序都是正确的   直接结束
+            if(already){
+                return arr;
+            }
+            return arr;
+        }
+        console.log(bubleSort2(myarr))
+
+
+    </script>
+</body>
+
+</html>

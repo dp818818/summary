@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // JS是单线程的，执行函数时会进入执行栈中，当遇见同步任务时，直接输入结果，出栈。
+        // 遇到异步任务，也就是宏任务，会先将该任务放到异步队列，遇见微任务时，会将微任务放到另一个微任务异步队列，当执行栈清空完毕后，
+        // 会执行微任务，当微任务队列执行完毕后，继续执行宏任务队列，直至清空宏任务队列，函数执行完毕。
+
+        /**
+         * 常见宏任务：setTimeout、fetch、ajax、setInterval 、UI 渲染等
+         * 常见微任务：nextTick, promise.then(), object.observe
+        */
+
+
+        let a = 1;
+        setTimeout(()=>{console.log('888')},1000)
+
+        new Promise((resolve,reject)=>{
+            resolve('resolve')
+        }).then(res=>{
+            setTimeout(()=>{console.log('666')},1000)
+            console.log(res)
+        })
+
+        new Promise((resolve,reject)=>{
+            resolve('777')
+        }).then(res=>{
+            console.log(res)
+        })
+        console.log(a)
+
+
+        // 1  resolve  7777  888  666 
+
+
+    </script>
+</body>
+</html>

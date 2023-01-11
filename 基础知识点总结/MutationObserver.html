@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+    </div>
+
+    <script>
+        // MutationObserver执行的函数会进入微任务队列 
+
+        // 函数
+        function delayFuc() {
+            console.log('delayFuc执行了')
+        }
+        //微任务MutationObserver  
+        const observer = new MutationObserver(delayFuc);
+        // 创建textNode
+        let textNode = document.createTextNode('1');
+        // 监听textNode， textNode改变就会调用delayFuc
+        observer.observe(textNode, { characterData: true })
+
+        textNode.data = '2'  //改变textNode  执行了delayFuc
+          
+    </script>
+</body>
+
+</html>

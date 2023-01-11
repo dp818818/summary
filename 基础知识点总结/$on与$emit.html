@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class MyBus {
+            constructor() {
+                //定义订阅者集合
+                this.callbacks = {}
+            }
+            // 订阅
+            $on(name, fn) {
+                this.callbacks[name] = this.callbacks[name] || [];
+                this.callbacks[name].push(fn)
+            }
+            // 发布
+            $emit(name, args) {
+                if (this.callbacks[name]) {
+                    // 遍历订阅者，执行订阅者的fn
+                    this.callbacks[name].forEach(fn => {
+                        fn(args)
+                    })
+                }
+            }
+        }
+
+        const bus = new MyBus();
+
+        bus.$on('tset', e => {
+            console.log('tset', e)
+        })
+
+        bus.$on('test2', e => {
+            console.log('test2', e)
+        })
+
+        bus.$emit('tset',[1,2,3]);
+        bus.$emit('test2','123');
+
+    </script>
+</body>
+
+</html>

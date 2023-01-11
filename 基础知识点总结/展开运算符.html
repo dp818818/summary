@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        // 解构
+        let [a, b, ...c] = [1, 2, 3, 4, 5]
+        // console.log(a)  //1
+        // console.log(b)  //2
+        // console.log(c)  //[3,4,5]
+
+        // 合并
+        let arr1 = [1, 2, 3]
+        let arr2 = [4, 5, 6]
+        let arr3 = [...arr1, ...arr2]
+        // console.log(arr3)  //[1, 2, 3, 4, 5, 6]
+
+
+        //对象不能够展开...
+        let obj = {
+            name: '爱的莱姆',
+            hobby: 'games'
+        }
+        //    console.log(...obj)  //Uncaught TypeError: Spread syntax requires ...iterable[Symbol.iterator] to be a function
+
+        //解决
+        // console.log({...obj})  //{name: '爱的莱姆', hobby: 'games'}     外面加大括号
+        // iterator.next()
+        let index = 0;
+        obj[Symbol.iterator] = function () {
+            let keys = Object.keys(obj)
+                return  {
+                    next() {
+                        if( index < keys.length){
+                            return {
+                                value: obj[keys[index++]],
+                                done: false
+                            }
+                        }else{
+                            return {
+                                value: undefined,
+                                done: true
+                            }
+                        }
+                    }
+                } 
+        }
+
+    //    for(let value of obj){
+    //       console.log(value)
+    //    }
+    //    console.log(...obj)
+ 
+    </script>
+</body>
+
+</html>
