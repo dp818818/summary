@@ -1,0 +1,5 @@
+区别：
+1.computed有缓存，watch没有缓存
+2.watch支持异步，computed不支持异步
+3.watch可以监听对象，有newValue和oldValue两个参数获取监听新旧值，监听对象要使用deep，也可以通过所设置immediate设置是否立即监听
+4.computed有返回值，依赖多个属性，有一个属性变化就会触发计算，watch一般适用于观察属性，属性变化就会触发回调执行函数。

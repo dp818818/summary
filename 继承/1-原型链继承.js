@@ -10,8 +10,8 @@ Parent.prototype.sex = '男'
 function Child(){
 }
 
-Child.prototype = new Parent()
-Child.constructor = Child
+Child.prototype = new Parent() 
+Child.prototype.constructor = Child
 
 let child = new Child(18)
 child.say() //my name is 十八

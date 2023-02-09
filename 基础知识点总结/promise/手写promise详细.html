@@ -419,7 +419,8 @@
                //状态改为成功
                this.promiseStatus = 'fulfilled';
                this.promiseResult = value;
-
+                
+               
                //执行队列中的事件
                while(this.onFulfilledCallBackList.length){
                    this.onFulfilledCallBackList.shift()(this.promiseResult);
@@ -442,77 +443,75 @@
 
             }
             then(onfulfilled,onrejected){
+                // console.log(onfulfilled)
                 //保证onfulfilled，onrejected都是函数，.then(res=>{},err=>{})参数是函数
                 onfulfilled = typeof onfulfilled == 'function' ? onfulfilled : val=>val ;
                 onrejected = typeof onrejected == 'function' ? onrejected : reason =>{ throw(reason) };
                 //返回新的promise  cb是函数  res或err
-                return new MyPromise( (resolve,reject) =>{
-                    //成功或失败是有上一个promise决定的
-                    //判断promiseStatus的状态 成功 失败 等待
+                var thenPromise = new MyPromise((resolve,reject)=>{
+                    try{
+                        const resolvePromise = cb =>{
+                            const x =  cb(this.promiseResult);
+                            if(x instanceof MyPromise){
+                                x.then(
+                                    value=>{resolve(value)},  //上一个promise成功就成功
+                                    reason=>{reject(reason)}  //上一个promise失败就失败
+                                )
+                            }else{
+                                // 非Promise就直接成功
+                                resolve(x)
+                            }
+                        }
+                    }catch(err){
+                        reject(err)
+                        throw new Error(err)
+                    }
+                    
                     if(this.promiseStatus == 'fulfilled'){
-                        //x是成功这个函数，function(){} 可能是promise,也可能不是
-                        let x =  onfulfilled(this.promiseResult);
-                        try{
-                            //instanceof 运算符 用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。  
-                            if(x instanceof MyPromise){
-                                //1.返回值是promise
-                                x.then(
-                                   value=>{resolve(value)}, //上一个promise成功就成功
-                                   reason=>{reject(reason)} //上一个promise失败就失败
-                                )
-                            }else{
-                                //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
-                                resolve(x)
-                            }
-                        }catch(e){
-                            //4.失败直接reject
-                            reject(e);
-                        }
-                    }else if(this.promiseStatus == 'rejected'){
-                        //x是失败这个函数
-                        let x = onrejected(this.promiseResult);
-                        try{
-                            if(x instanceof MyPromise){
-                                //1.返回值是promise
-                                x.then(
-                                   value=>{resolve(value)}, //上一个promise成功就成功
-                                   reason=>{reject(reason)} //上一个promise失败就失败
-                                )
-                            }else{
-                                //3.如果返回值非promise对象，新promise对象就是成功，值为此返回值
-                                resolve(x)
-                            }
-                        }catch(e){
-                            //4.失败直接reject
-                            reject(e);
-                        }
+                        resolvePromise(onfulfilled)
+                    } else if(this.promiseStatus == 'rejected'){
+                        resolvePromise(onrejected)
                     }else if(this.promiseStatus == 'pending'){
-                        //等待状态，需要加入到事件队列
-                        this.onFulfilledCallBackList.push(onfulfilled);
-                        this.onRejectedCallBacklist.push(onrejected);
+                        this.onFulfilledCallBackList.push(resolvePromise.bind(this, onFulfilled))
+                        this.onRejectedCallBacklist.push(resolvePromise.bind(this, onRejected))
+
                     }
                 })
+                return thenPromise
             }
         }
 
         
 
        //测试一下
-       let a = new MyPromise((resolve,reject)=>{
+    //    let a = new MyPromise((resolve,reject)=>{
+    //         setTimeout(()=>{
+    //             resolve(132)
+    //         },3000)
+    //    }).then(res=>{
+    //         console.log('1',res);
+    //         return res;
+    //    },err=>{
+    //         console.log(err);
+    //    }).then(res=>{
+    //         console.log('2',res) ;
+    //    },err=>{
+    //         console.log(err);
+    //    })
+          
+
+    let b = new MyPromise((resolve,reject)=>{
             setTimeout(()=>{
-                resolve(132)
-            },500)
-       }).then(res=>{
-            console.log(res);
-            return res;
-       },err=>{
-            console.log(err);
-       }).then(res=>{
-            console.log(res) ;
-       },err=>{
-            console.log(err);
-       })
-        
+                resolve(111111)
+            },1000)
+    }).then(res=>{
+        console.log('1',res)
+        return 222222
+    }).then(res=>{
+        console.log('2',res)
+    })
+       
+
 
 
     </script>

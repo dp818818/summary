@@ -135,12 +135,17 @@
 
 
         const test = new MyPromise((resolve,reject)=>{
+             console.log('开始！')
              resolve(123) 
          }).then(res=>{
-             return  res
+             return new MyPromise((resolve,reject)=>{
+                setTimeout(()=>{
+                    resolve(res)
+                },2000)
+             })
          }).then(
              res=>{
-                console.log('成功')
+                console.log(res,'成功')
              },
              err=>{
                 console.log('失败')
