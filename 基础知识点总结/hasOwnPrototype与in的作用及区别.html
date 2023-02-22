@@ -19,13 +19,21 @@
 
         //  console.log('name' in obj) 
 
-        console.log(obj.hasOwnProperty('name')) //true
+        // console.log(obj.hasOwnProperty('name')) //true
 
-        obj.__proto__.sex = '男'
+        obj.__proto__.sex = '男'  //obj.__proto__.__proto__ === null //true
         
         //  console.log('sex' in obj) 
 
-        console.log(obj.hasOwnProperty('sex')) //false
+        // console.log(obj.hasOwnProperty('sex')) //false
+
+        
+
+       
+
+
+
+
 
     </script>
 </body>

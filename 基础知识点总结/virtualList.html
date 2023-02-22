@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 引入Vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <style>
+        .virtual-list-container {
+            height: 420px;
+            width: 300px;
+            text-align: center;
+            overflow: auto;
+            position: relative;
+        }
+        .virtual-list-phantom{
+            width: 100%;
+            position: absolute;
+            top: 0; 
+            z-index: -1;
+        }
+        .virtual-list{
+            width: 100%;
+            /* 默认在最上面 */
+        }
+        .virtual-item{
+            color: #555;
+            border-bottom: 1px solid #999;
+        }
+    </style>
+
+    <div id="el">
+        {{startOffSet}}
+        <div  ref="list" class="virtual-list-container"   @scroll="scrollContainer">
+            <div class="virtual-list-phantom"  :style="{'height':listHeight+'px'}"></div>
+            <div class="virtual-list"  :style="{ 'position': 'absolute','top': startOffSet+'px' }">
+                <div  class="virtual-item"  v-for="item in visibleList" :style="{'height':itemSize+'px','line-height':itemSize+'px'}">
+                    {{item.value}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let vm = new Vue({
+            el: "#el",
+            props: {
+                itemSize: {
+                    type: Number,
+                    default: 100
+                }
+            },
+            data() {
+                return {
+                    // 大量的数据
+                    listDate: [
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                        { value: 111 }, { value: 222 },{ value: 333 }, { value: 444 },{ value: 555 }, { value: 666 },{ value: 777 }, { value: 888 },{ value: 999 },
+                    ],
+                    start: 0,
+                    end: null,
+                    startOffset:0
+                }
+            },
+            mounted(){
+                this.start = 0;
+                this.end =  this.start + this.visibleCount
+            },
+            computed: {
+                visibleList() {
+                    //slice()左闭右开的方式进行截取
+                    return  this.listDate.slice(this.start,Math.min(this.end,this.listDate.length))
+                },
+                visibleCount(){
+                    // 默认可视区域为420px
+                    return  Math.ceil(420 / this.itemSize)  //向上取整
+                },
+                listHeight(){
+                    // 所有数据总高度
+                    return this.listDate.length * this.itemSize
+                },
+                //偏移量对应的style
+                getTransform(){
+                //    console.log('this.startOffse',this.startOffset) 
+                //    return this.startOffset * 1;
+                },
+            },
+            methods: {
+                scrollContainer(){
+                    // console.log(this.$refs['list'].scrollTop)
+                    let scrollTop = this.$refs['list'].scrollTop
+                    this.start = Math.floor(scrollTop/this.itemSize)  //向下取整
+                    this.end = this.start + this.visibleCount;
+                    this.startOffSet = scrollTop - (scrollTop % this.itemSize);   //保证每次移动都是整数个内容，不会发生移动不到一个的内容
+                    // console.log(this.startOffSet)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

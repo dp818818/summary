@@ -1,0 +1,11 @@
+{
+  "name": "summation",
+  "version": "1.0.0",
+  "description": "适用于求和，求差，支持小数精度计算",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dengp",
+  "license": "ISC"
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 使用canvas画一个笑脸 -->
+    <canvas id="canvas" width="600" height="400" style="width: 600px;height: 400px;"></canvas>
+
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+        
+        ctx.beginPath();
+        // 画一个圆   
+        ctx.arc(300,200,100,0,Math.PI*2)
+         
+        // 注意需要移动画笔  不然一部分与另一部分默认都是有连线的  
+        // 移动画笔到350，200继续画嘴巴
+        ctx.moveTo(350,200);
+        ctx.arc(300,200,50,0,Math.PI)
+        // 移动画笔 左眼圆
+        ctx.moveTo(270,150)
+        ctx.arc(250,150,20,0,Math.PI*2)
+        // 移动画笔 右眼圆
+        ctx.moveTo(370,150)
+        ctx.arc(350,150,20,0,Math.PI*2)
+        ctx.stroke();
+
+    </script>
+</body>
+</html>

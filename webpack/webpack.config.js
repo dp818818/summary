@@ -13,6 +13,8 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 
 module.exports = {
+  //使用 source-map 最终会单独打包出一个 .map 文件，我们可以根据报错信息和此 map 文件，进行错误解析，定位到源代码。
+  devtool: 'cheap-module-eval-source-map', //开发环境下使用   
   mode: 'development',
   entry: './src/index.js',
   output: {
@@ -32,12 +34,19 @@ module.exports = {
         use: ['sass-loader'],
         exclude: /node_modules/
       },
+      // 处理css
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', {
           loader: 'postcss-loader'
         }],
         exclude: /node_modules/
+      },
+      // babel-loader   将js转译为低版本，为了兼容部分浏览器  配置babel 在.babelrc文件，也可以在webpack中配置 
+      {
+        test:/\.jsx?$/,
+        use:['babel-loader'],
+        exclude:/node_modules/
       }
     ]
   },

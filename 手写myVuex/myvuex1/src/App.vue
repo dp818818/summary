@@ -1,6 +1,8 @@
 <template>
   <div>
-    今年：{{$store.state.age}}岁了！
+    state今年：{{$store.state.age}}岁了！
+    <br />
+    getters今年：{{$store.getters.age}}岁了！
     <div>
       <button @click="add">过一年</button>
       <br />
@@ -19,10 +21,10 @@ export default {
   },
   methods: {
     add(){
-      // this.$store.commit('setAge',1);
+      this.$store.commit('setAge',1);
     },
     deleyAdd(){
-      // this.$store.dispatch('delayAge',1)
+      this.$store.dispatch('delayAge',1)
     }
   }
 

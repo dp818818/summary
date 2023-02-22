@@ -1,0 +1,8 @@
+{
+    "presets": ["@babel/preset-env"],
+    "plugins": [
+        [
+            "@babel/plugin-transform-runtime",{"corejs":3}  //使用@babel/plugin-transform-runtime，并配置参数 corejs: 3。不会污染全局环境
+        ]
+    ]
+}

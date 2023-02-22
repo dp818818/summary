@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="canvas" width="600" height="400" style="width: 600px;height: 400px;border:1px solid"></canvas>
+    </div>
+
+
+    <script>
+        let canvas = document.getElementById('canvas');
+        //获取canvas上下文  使用2d   
+        let ctx = canvas.getContext('2d');
+        //将画笔移动到300，200位置 也就是canvas的中心
+        ctx.moveTo(300, 200)
+        // 三条线画成一个正方形 
+        ctx.lineTo(300,300)
+        ctx.lineTo(200,300)
+        ctx.lineTo(300,200)
+        // 画线
+        ctx.stroke()
+
+
+        ctx.beginPath()
+        ctx.moveTo(400, 200)     
+        ctx.lineTo(400,300)
+        ctx.lineTo(300,300)
+        ctx.closePath()
+        // 填充
+        ctx.fill()
+     
+    </script>
+</body>
+
+</html>

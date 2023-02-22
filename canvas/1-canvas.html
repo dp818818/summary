@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas1"  width="600" height="600">
+        您的浏览器版本过低，无法支持canvas
+    </canvas>
+
+    <script>
+        let canvas = document.getElementById('canvas1');
+        // 检查浏览器支持情况
+        if(canvas.getContext){
+           let ctx = canvas.getContext('2d')
+           ctx.fillStyle = "rgb(200,0,0)";
+           //正方形 x y 长 宽    
+           ctx.fillRect (10, 10, 55, 50);
+
+            ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+            ctx.fillRect (30, 30, 55, 50);
+        }
+    </script>
+</body>
+</html>
