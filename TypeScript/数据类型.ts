@@ -179,6 +179,13 @@ b16 = 1;
 
 
 /**17.类型断言 */
+//通过类型断言这种方式可以告诉编译器，“相信我，我知道自己在干什么”
+let someValue:any  = "this is a value";
+let strLength: number = (<string>someValue).length;
+//另一种as 语法：
+let someValue2:any  = "this is a value";
+let strLength2:number = (someValue2 as string).length
+
 
 
 /**泛型 */

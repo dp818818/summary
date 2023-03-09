@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 解除对象与对象之间的耦合，通过新增一个中介者对象，来进行通信，而不是相互引用，当一个对象改变时，只需要通知中介者对象 -->
+    <div>
+        选择颜色：<select name="" id="colorSelect">
+            <option value="">请选择</option>
+            <option value="red">红色</option>
+            <option value="blue">蓝色</option>
+        </select>
+        <br />
+        选择内存：<select name="" id="memorySelect">
+            <option value="">请选择</option>
+            <option value="32G">32G</option>
+            <option value="63G">64G</option>
+        </select>
+        <br />
+        输入购买数量：<input type="text" id="numberInput" />
+        <br />
+        <div>你选择了颜色：<span id="colorInfo"></span></div>
+        <div>你选择了内存：<span id="memoryInfo"></span></div>
+        <div>你选择了数量：<span id="numberInfo"></span></div>
+        <button id="nextBtn" disabled="true">请选择手机颜色和购买数量</button>
+
+    </div>
+
+    <script>
+        const goods = {
+            "red|32G": 3,
+            "red|16G": 0,
+            "blue|32G": 1,
+            "blue|16G": 6
+        }
+
+        colorSelect = document.getElementById('colorSelect')
+        memorySelect = document.getElementById('memorySelect')
+        numberInput = document.getElementById('numberInput')
+        colorInfo = document.getElementById('colorInfo')
+        memoryInfo = document.getElementById('memoryInfo')
+        numberInfo = document.getElementById('numberInfo')
+        nextBtn = document.getElementById('nextBtn')
+
+        // 中介者
+        mediator = (function(){
+            return{
+                changed:function(obj){
+                    const color = colorSelect.value,
+                          memory = memorySelect.value,
+                          number = numberInput.value,
+                          stock  = goods[`${color}|${memory}`]
+
+                    if(obj === colorSelect){
+                        colorInfo.innerHTML  = color
+                    }else if(obj === memorySelect){
+                        memoryInfo.innerHTML = memory
+                    }else if(obj === numberInput){
+                        numberInfo.innerHTML = number
+                    }
+
+                    if(!color){
+                        nextBtn.innerHTML = '请选择颜色';
+                        return
+                    }
+                    if(!memory){
+                        nextBtn.innerHTML = '请选择内存大小';
+                        return
+                    }
+                    if(stock - number*1 < 1){
+                        nextBtn.innerHTML = '库存不足';
+                        return   
+                    }
+                    nextBtn.disabled = false;
+                    nextBtn.innerHTML = '添加到购物车'
+                }
+            }
+        })();
+
+        colorSelect.onchange = function(){
+            mediator.changed(this)
+        }
+        memorySelect.onchange = function(){
+            mediator.changed(this)  
+        }
+        numberInput.oninput  = function(){
+            mediator.changed(this)
+        }
+    </script>
+</body>
+
+</html>

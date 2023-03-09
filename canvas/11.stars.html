@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        #canvas {
+            background-color: black;
+        }
+    </style>
+
+    <canvas id="canvas"></canvas>
+
+    <script>
+        let canvas = document.getElementById('canvas');
+        let ctx = canvas.getContext('2d');
+
+        // 设置线为白色
+        ctx.strokeStyle = 'white'
+        // 获取宽度
+        let aw = document.documentElement.clientWidth;
+        let ah = document.documentElement.clientHeight;
+
+
+        canvas.width = aw;
+        canvas.height = ah;
+
+
+        function Star(x, y, r) {
+            this.x = x;
+            this.y = y;
+            this.r = r;
+            // 取-2~2的随机值   数越大移动越快
+            this.speedX = (Math.random() * 2) * Math.pow(-1, Math.round(Math.random()))
+            this.speedY = (Math.random() * 2) * Math.pow(-1, Math.round(Math.random()))
+        }
+
+        // 画星星
+        Star.prototype.draw = function () {
+            // 需要加上beginPath closePath  不然小球移动会连成线
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'white'
+            ctx.fill()
+            ctx.closePath();
+        }
+        // 星星移动
+        Star.prototype.move = function () {
+            this.x = this.x - this.speedX;
+            this.y = this.y - this.speedY;
+            // 当碰到了边界 要反弹
+            if (this.x > aw || this.x < 0) {
+                this.speedX = this.speedX * -1
+            }
+            if (this.y > ah || this.y < 0) {
+                this.speedY = this.speedY * -1
+            }
+        }
+
+        // 星星之间连线
+        function drawLine(startX, startY, endX, endY) {
+            ctx.beginPath();
+            ctx.strokeStyle = 'white';
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, endY);
+            ctx.stroke()
+        }
+
+
+        // 画一百个星星
+        // 存放在数组中  
+        let stars = [];
+        for (let i = 0; i < 100; i++) {
+            stars.push(new Star(Math.random() * aw, Math.random() * ah, 4))
+        }
+
+        // 鼠标点击 生成3个小星星
+        window.onclick = function(e){
+            for(let i=0;i<3;i++){
+                stars.push(new Star(e.clientX,e.clientY,4))
+            }
+        }
+
+        // 生成鼠标小星星，跟着鼠标移动
+        let mounseStar = new Star(0,0,4)
+        window.onmousemove = function(e){
+            mounseStar.x = e.clientX
+            mounseStar.y = e.clientY
+        }
+
+        function animate() {
+            // 每一帧都需要清空画布
+            ctx.clearRect(0, 0, aw, ah);
+            // 鼠标星星渲染
+            mounseStar.draw()
+
+            stars.forEach((star, index) => {
+                star.draw();
+                star.move();
+                // 当两个点相距小于50时，连线
+                for (let i = index + 1; i < stars.length; i++) {
+                    if (Math.abs(star.x - stars[i].x) < 50 && Math.abs(star.y - stars[i].y) < 50) {
+                        drawLine(star.x,star.y,stars[i].x,stars[i].y)
+                    }
+                }
+
+                // 鼠标星星连线
+                if(Math.abs(star.x-mounseStar.x) <50 && Math.abs(star.y-mounseStar.y) < 50){
+                    drawLine(star.x,star.y,mounseStar.x,mounseStar.y)
+                }
+            })
+
+            requestAnimationFrame(animate)
+        }
+
+        animate()
+
+    </script>
+
+</body>
+
+</html>

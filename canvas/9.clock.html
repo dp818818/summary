@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id="canvas" width="600" height="600"></canvas>
+
+    <script>
+        function clock() {
+            let ctx = document.getElementById('canvas').getContext('2d');
+
+            // 获取时间
+            let time = new Date();
+            let hour = time.getHours() % 12;  //当前的小时
+            let minute = time.getMinutes();   //当前分钟
+            let second = time.getSeconds();   //当前秒
+            // 每次指针旋转需要清空一下画布，不然会将以前的遗留下来
+            ctx.clearRect(0, 0, 600, 600)  
+            ctx.save()
+            // 将圆点由300，300变为0，0
+            ctx.translate(300, 300)
+            ctx.lineCap = 'round';  //指针设为圆角
+            ctx.save()
+
+            // 先画一个外圆 
+            ctx.beginPath()
+            ctx.strokeStyle = '#325FA2';
+            ctx.lineWidth = 5;
+            ctx.arc(0, 0, 100, 0, Math.PI * 2)
+            ctx.stroke()
+
+            // DW 文字
+            ctx.font = "24px serif";
+            ctx.fillText("D W", -20, -50);
+
+            // 画时针刻度
+            ctx.lineWidth = 3
+            for (let i = 0; i < 12; i++) {
+                ctx.rotate(2 * Math.PI / 12)  //360度分12份
+                ctx.beginPath();
+                // 第一个刻度是x轴水平 也就是3点 不要搞错了哦
+                ctx.moveTo(85, 0)  
+                ctx.lineTo(100, 0)
+                ctx.stroke()
+            }
+
+            // 画分针刻度
+            ctx.lineWidth = 1
+            for (let i = 0; i < 60; i++) {
+                ctx.rotate(2 * Math.PI / 60)  //360度分60份
+                ctx.beginPath();
+                ctx.moveTo(90, 0)
+                ctx.lineTo(100, 0)
+                ctx.stroke()
+            }
+
+            // 画时针
+            //计算偏转度数  起始在3点钟方向，所以需要减去90度，回到12点方向
+            const hourRound = 2 * Math.PI / 12 * hour + 2 * Math.PI / 12 * (minute / 60) - Math.PI / 2
+            ctx.rotate(hourRound)
+            ctx.beginPath();
+            ctx.lineWidth = 10
+            ctx.strokeStyle = "black";
+            ctx.moveTo(-20, 0)
+            ctx.lineTo(50, 0)
+            ctx.stroke();
+
+
+            // 画分针
+            // 计算度数  起始在3点钟方向，所以需要减去90度，回到12点方向
+            const minuteRound = 2 * Math.PI / 60 * minute - Math.PI / 2
+            ctx.rotate(minuteRound);
+            ctx.beginPath();
+            ctx.lineWidth = 7;
+            ctx.moveTo(-20, 0)
+            ctx.lineTo(70, 0)
+            ctx.stroke();
+
+
+            // 画秒针
+            const secondRound = 2 * Math.PI / 60 * second - Math.PI / 2
+            ctx.rotate(secondRound);
+            ctx.beginPath();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = "#D40000";
+            ctx.moveTo(-20, 0)
+            ctx.lineTo(85, 0)
+            ctx.stroke();
+
+            ctx.restore()
+            ctx.restore();
+        }
+        
+
+        setInterval(()=>{
+            clock()
+        },1000)
+
+
+
+    </script>
+</body>
+
+</html>
