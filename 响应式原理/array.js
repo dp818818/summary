@@ -11,8 +11,10 @@ methodNeedChange.forEach(methodName => {
     //备份初始的方法
     const original = Array.prototype[methodName]
     def(arrayMethods, methodName, function () {
+        // console.log(this) //this 是使用重写方法的数组   
+        // console.log(arguments) //arguments 是使用重写方法传的参数  
         const result = original.apply(this, arguments)
-
+  
         //参数
         const args = [...arguments];
 
@@ -35,8 +37,8 @@ methodNeedChange.forEach(methodName => {
         }
         //将添加的数据响应式  observeArray是ob上的属性
         ob.observeArray(insertList)
-        console.log(ob)
-        console.log('我是被重写的，此时会调用！')
+        // console.log(ob)
+        // console.log('我是被重写的，此时会调用！')
         return result;
     }, false)
 })

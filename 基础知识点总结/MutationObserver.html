@@ -26,8 +26,11 @@
         // 监听textNode， textNode改变就会调用delayFuc
         observer.observe(textNode, { characterData: true })
 
-        textNode.data = '2'  //改变textNode  执行了delayFuc
-          
+        textNode.data = '2'  
+        console.log('改变textNode')  
+
+        //改变textNode
+        //delayFuc执行了
     </script>
 </body>
 

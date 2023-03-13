@@ -13,11 +13,12 @@ let  obj = {
 
 observe(obj);
 
-new Watch(obj,'e',(oldVal,newVal)=>{
-    console.log(`${oldVal}改变为${newVal}`)
-})
+// new Watch(obj,'e',(oldVal,newVal)=>{
+//     console.log(`${oldVal}改变为${newVal}`)
+// })
 
-obj.e = [55,66];
+// obj.e = [55,66];
+obj.e.push(55)
 
 
 /**

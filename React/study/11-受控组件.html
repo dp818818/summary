@@ -17,6 +17,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <div id="root"></div>
+    <!-- 对于受控组件来说，输入的值始终由 React 的 state 驱动,只能通过使用 setState()来更新 -->
     <script type="text/babel">
         class MyDom extends React.Component {
             state = {

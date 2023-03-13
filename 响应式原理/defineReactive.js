@@ -12,7 +12,7 @@ export default function defineReactive(data, key, value) {
         //可删除
         configurable: true,
         get(){
-            console.log(`${key}被读取了，${value},get`);
+            // console.log(`${key}被读取了，${value},get`);
             if(Dep.target){
                 //收集依赖
                 dep.depend();
@@ -24,7 +24,7 @@ export default function defineReactive(data, key, value) {
             return value;
         },
         set(newVal){
-            console.log(`${key}被更改了,${newVal},set `);
+            // console.log(`${key}被更改了,${newVal},set `);
             value = newVal;
             //设置新值，也需要observe变为响应式的
             child = observe(value);
